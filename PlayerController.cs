@@ -242,7 +242,7 @@ public class PlayerController : NetworkBehaviour
     {
         if (collision.gameObject.CompareTag("Player"))
         {
-            Debug.Log("Collided with other Player!");
+            Debug.Log("Collided with other player!");
             broTouch = true;
             if (collision.rigidbody != null)
             {

@@ -24,6 +24,18 @@ public class PlayerController : NetworkBehaviour
 
     public int speed = 10;
     public int rotationSpeed = 360;
+    private int _seshKills = 0;
+    public int seshKills {
+        get { return _seshKills; }
+        set { if (_seshKills != value)
+            {
+                _seshKills = value;
+                OnKillsChanged?.Invoke(_seshKills);
+            }
+        }
+    }
+
+    public event Action<int> OnKillsChanged;
 
     public bool onFloor;
     public bool jump;
@@ -292,6 +304,7 @@ public class PlayerController : NetworkBehaviour
                 {
                     hitPos = playerHit.point;
                     KillOtherServerRpc(targetNetObj, hitPos);
+                    seshKills += 1;
                 }
             }
         }

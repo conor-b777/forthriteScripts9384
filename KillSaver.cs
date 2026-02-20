@@ -7,30 +7,36 @@ public class KillSaver : MonoBehaviour
     public TextMeshProUGUI killsText;
 
     private int oldKillsValue;
-    private int totalKillsValue;
 
     private void Awake()
     {
-        if (playerController != null)
-        {
-            playerController.OnKillsChanged += OnSeshKillsChanged;
-            oldKillsValue = PlayerPrefs.GetInt("Total Kills");
-        }
+        oldKillsValue = PlayerPrefs.GetInt("Total Kills", 0);
+        killsText.text = "Total Kills: " + oldKillsValue;
+
+        PlayerController.OnLocalPlayerSpawned += OnLocalPlayerSpawned;
+    }
+
+    private void OnLocalPlayerSpawned(PlayerController pc)
+    {
+        playerController = pc;
+        playerController.OnKillsChanged += OnSeshKillsChanged;
     }
 
     private void OnSeshKillsChanged(int newKillsValue)
     {
-        totalKillsValue = oldKillsValue + newKillsValue;
+        int totalKillsValue = oldKillsValue + newKillsValue;
+
         PlayerPrefs.SetInt("Total Kills", totalKillsValue);
         PlayerPrefs.Save();
-        killsText.text = "Total Kills: " + totalKillsValue.ToString();
+
+        killsText.text = "Total Kills: " + totalKillsValue;
     }
 
     private void OnDestroy()
     {
+        PlayerController.OnLocalPlayerSpawned -= OnLocalPlayerSpawned;
+
         if (playerController != null)
-        {
             playerController.OnKillsChanged -= OnSeshKillsChanged;
-        }
     }
 }
